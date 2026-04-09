@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strumenti per il Futuro — Guida Interattiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --accent: #c8f135;
+    --accent2: #ff6b35;
+    --accent3: #3b9eff;
+    --text: #f0f0f0;
+    --muted: #888;
+    --bad: #ff4444;
+    --good: #44dd88;
+    --border: #2a2a2a;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 24px;
+    background: rgba(13,13,13,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.95rem; color: var(--accent); margin-right: 10px; white-space: nowrap; flex-shrink: 0; }
+  .nav-btn { background: none; border: 1px solid var(--border); border-radius: 100px; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; padding: 5px 14px; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+  .nav-btn:hover, .nav-btn.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
+
+  section { display: none; min-height: 100vh; padding: 88px 48px 60px; animation: fadeIn 0.35s ease; }
+  section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HERO */
+  .hero { display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,241,53,0.1) 0%, transparent 70%); pointer-events: none; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(200,241,53,0.1); border: 1px solid rgba(200,241,53,0.3); border-radius: 100px; padding: 6px 16px; font-size: 0.75rem; font-weight: 500; color: var(--accent); margin-bottom: 28px; width: fit-content; }
+  .hero-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+  h1.big { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(3rem, 8vw, 7rem); line-height: 0.95; letter-spacing: -0.03em; max-width: 900px; margin-bottom: 22px; }
+  h1.big span { color: var(--accent); }
+  .hero-desc { font-size: 1.1rem; color: var(--muted); max-width: 520px; line-height: 1.6; margin-bottom: 36px; font-weight: 300; }
+  .btn-primary { background: var(--accent); color: #000; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 14px 28px; border-radius: 100px; border: none; cursor: pointer; transition: all 0.2s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,241,53,0.3); }
+  .hero-stats { display: flex; gap: 40px; margin-top: 52px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .stat-label { font-size: 0.73rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* SECTION HEADER */
+  .section-header { margin-bottom: 44px; }
+  .section-num { font-family: 'Syne', sans-serif; font-size: 0.71rem; font-weight: 700; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+  .section-header h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+  .section-header p { margin-top: 12px; font-size: 1rem; color: var(--muted); max-width: 560px; line-height: 1.6; font-weight: 300; }
+  .subsection-title { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.01em; }
+
+  /* STAT STRIP */
+  .stat-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 14px; margin-bottom: 40px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; text-align: center; transition: all 0.2s; }
+  .stat-box:hover { border-color: rgba(200,241,53,0.3); transform: translateY(-2px); }
+  .stat-box .sb-num { font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+  .stat-box .sb-label { font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
+
+  /* COMPARE */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 36px; }
+  .profile-card { background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); transition: transform 0.2s; }
+  .profile-card:hover { transform: translateY(-4px); }
+  .card-header { padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .card-label { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; }
+  .card-label.bad { color: var(--bad); } .card-label.good { color: var(--good); }
+  .card-body { padding: 18px; }
+  .fake-profile { display: flex; flex-direction: column; gap: 11px; }
+  .fp-top { display: flex; gap: 13px; align-items: center; }
+  .fp-avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .fp-avatar.bad-av { background: #2a1a1a; border-color: var(--bad); }
+  .fp-avatar.good-av { background: #0a2a1a; border-color: var(--good); }
+  .fp-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 3px; }
+  .fp-headline { font-size: 0.77rem; line-height: 1.4; }
+  .fp-headline.bad-h { color: var(--bad); opacity: 0.7; font-style: italic; }
+  .fp-headline.good-h { color: var(--good); opacity: 0.9; }
+  .fp-section { background: var(--surface2); border-radius: 9px; padding: 10px 13px; border: 1px solid var(--border); }
+  .fp-section-title { font-family: 'Syne', sans-serif; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .fp-text { font-size: 0.8rem; line-height: 1.5; }
+  .fp-text.bad-t { color: #e06060; font-style: italic; } .fp-text.good-t { color: #a0f0c0; }
+  .annotation { display: flex; align-items: flex-start; gap: 8px; font-size: 0.77rem; padding: 4px 0; }
+  .annotation.bad-a { color: #ff8080; } .annotation.good-a { color: #80ffb0; }
+
+  /* RECRUITER INSIGHT */
+  .recruiter-insight { background: linear-gradient(135deg, rgba(59,158,255,0.06) 0%, rgba(200,241,53,0.04) 100%); border: 1px solid rgba(59,158,255,0.22); border-radius: var(--radius); padding: 26px 30px; margin-bottom: 38px; }
+  .ri-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--accent3); margin-bottom: 14px; }
+  .ri-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 10px; }
+  .ri-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.82rem; line-height: 1.5; }
+  .ri-icon { flex-shrink: 0; font-size: 0.95rem; margin-top: 1px; }
+
+  /* DO/DON'T */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .rule-list { display: flex; flex-direction: column; gap: 8px; }
+  .rule-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.83rem; padding: 9px 13px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); line-height: 1.4; }
+  .rule-item.do-item { border-color: rgba(68,221,136,0.23); background: rgba(68,221,136,0.04); }
+  .rule-item.dont-item { border-color: rgba(255,68,68,0.23); background: rgba(255,68,68,0.04); }
+
+  /* TIPS */
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(265px, 1fr)); gap: 14px; }
+  .tip-card { background: var(--surface); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); position: relative; overflow: hidden; transition: all 0.25s; }
+  .tip-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+  .tip-card:hover { border-color: rgba(200,241,53,0.3); transform: translateY(-3px); }
+  .tip-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: rgba(200,241,53,0.12); line-height: 1; margin-bottom: 5px; }
+  .tip-title { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; margin-bottom: 7px; }
+  .tip-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+
+  /* NOTEBOOK */
+  .notebook-demo { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; margin-bottom: 36px; }
+  .nb-topbar { background: var(--surface2); padding: 11px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+  .nb-dots { display: flex; gap: 6px; }
+  .nb-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .nb-dot:nth-child(1) { background: #ff5f57; } .nb-dot:nth-child(2) { background: #febc2e; } .nb-dot:nth-child(3) { background: #28c840; }
+  .nb-title { font-size: 0.77rem; color: var(--muted); font-family: 'Syne', sans-serif; font-weight: 600; }
+  .nb-body { display: grid; grid-template-columns: 215px 1fr; min-height: 280px; }
+  .nb-sidebar { border-right: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .nb-sidebar-title { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 4px; }
+  .nb-doc { background: rgba(200,241,53,0.07); border: 1px solid rgba(200,241,53,0.18); border-radius: 7px; padding: 8px 11px; font-size: 0.77rem; display: flex; align-items: center; gap: 8px; }
+  .nb-chat { padding: 16px; display: flex; flex-direction: column; gap: 11px; }
+  .chat-msg { display: flex; gap: 9px; align-items: flex-start; }
+  .chat-avatar { width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; font-weight: 700; }
+  .chat-avatar.user { background: rgba(59,158,255,0.2); color: var(--accent3); }
+  .chat-avatar.ai { background: rgba(200,241,53,0.15); color: var(--accent); }
+  .chat-bubble { background: var(--surface2); border-radius: 11px; padding: 9px 13px; font-size: 0.79rem; line-height: 1.5; max-width: 370px; border: 1px solid var(--border); }
+  .chat-bubble.ai-bubble { background: rgba(200,241,53,0.05); border-color: rgba(200,241,53,0.18); color: rgba(200,241,53,0.85); }
+
+  /* FEATURE GRID */
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)); gap: 13px; margin-bottom: 30px; }
+  .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; gap: 14px; align-items: flex-start; transition: all 0.2s; }
+  .feature-card:hover { border-color: rgba(200,241,53,0.3); transform: translateY(-2px); }
+  .fc-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .fc-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; margin-bottom: 4px; }
+  .fc-desc { font-size: 0.79rem; color: var(--muted); line-height: 1.5; }
+
+  /* PORTALS */
+  .portal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(305px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .portal-card { background: var(--surface); border-radius: var(--radius); padding: 20px 22px; border: 1px solid var(--border); display: flex; gap: 14px; align-items: flex-start; transition: all 0.2s; }
+  .portal-card:hover { transform: translateY(-3px); border-color: rgba(59,158,255,0.28); }
+  .portal-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .portal-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.97rem; margin-bottom: 4px; }
+  .portal-desc { font-size: 0.79rem; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+  .portal-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .ptag { display: inline-block; border-radius: 100px; padding: 2px 9px; font-size: 0.66rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
+  .ptag.green { background: rgba(68,221,136,0.1); border: 1px solid rgba(68,221,136,0.23); color: var(--good); }
+  .ptag.blue { background: rgba(59,158,255,0.1); border: 1px solid rgba(59,158,255,0.23); color: var(--accent3); }
+  .ptag.orange { background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.23); color: var(--accent2); }
+
+  .strategy-box { background: rgba(200,241,53,0.04); border: 1px solid rgba(200,241,53,0.18); border-radius: var(--radius); padding: 26px 30px; }
+  .strategy-box h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--accent); margin-bottom: 14px; }
+  .strategy-steps { display: flex; flex-direction: column; gap: 10px; }
+  .strategy-step { display: flex; gap: 13px; align-items: flex-start; font-size: 0.84rem; line-height: 1.5; }
+  .step-num { background: var(--accent); color: #000; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.72rem; width: 21px; height: 21px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+  /* CV */
+  .cv-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 36px; }
+  .cv-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+  .cv-card-header { padding: 13px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .cv-card-body { padding: 18px; }
+  .cv-row { display: grid; grid-template-columns: 85px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .cv-row:last-child { border-bottom: none; }
+  .cv-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); padding-top: 2px; }
+  .cv-content { font-size: 0.8rem; line-height: 1.5; }
+  .cv-content.bad-cv { color: #e06060; font-style: italic; }
+  .cv-content.good-cv { color: #a0f0c0; }
+
+  .cv-rules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .cv-rule { background: var(--surface); border-radius: 11px; padding: 15px; border: 1px solid var(--border); display: flex; gap: 11px; }
+  .cv-rule.ok { border-left: 3px solid var(--good); }
+  .cv-rule.ko { border-left: 3px solid var(--bad); }
+  .cv-rule-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .cv-rule-text { font-size: 0.8rem; line-height: 1.5; color: var(--text); }
+  .cv-rule-text strong { display: block; font-family: 'Syne', sans-serif; font-size: 0.83rem; margin-bottom: 3px; }
+
+  .format-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 28px; }
+  .format-card { background: var(--surface); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); text-align: center; transition: all 0.2s; }
+  .format-card:hover { border-color: rgba(200,241,53,0.3); transform: translateY(-3px); }
+  .fc-big-icon { font-size: 1.9rem; margin-bottom: 10px; display: block; }
+  .format-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; margin-bottom: 7px; }
+  .format-desc { font-size: 0.77rem; color: var(--muted); line-height: 1.5; }
+
+  /* CALLOUT */
+  .callout { display: flex; gap: 14px; align-items: flex-start; border-radius: var(--radius); padding: 20px 24px; margin-bottom: 28px; }
+  .callout.yellow { background: rgba(255,200,50,0.05); border: 1px solid rgba(255,200,50,0.18); }
+  .callout.orange { background: rgba(255,107,53,0.05); border: 1px solid rgba(255,107,53,0.18); }
+  .callout.blue { background: rgba(59,158,255,0.05); border: 1px solid rgba(59,158,255,0.18); }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+  .callout-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.92rem; margin-bottom: 4px; }
+  .callout-text { font-size: 0.81rem; color: var(--muted); line-height: 1.55; }
+  .callout.yellow .callout-title { color: #ffc832; }
+  .callout.orange .callout-title { color: var(--accent2); }
+  .callout.blue .callout-title { color: var(--accent3); }
+
+  /* ===== CANVAS STYLES ===== */
+  .canvas-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+  .canvas-side { background: var(--surface); border-radius: var(--radius); padding: 22px 26px; border: 1px solid var(--border); }
+  .canvas-side.left { border-top: 4px solid var(--accent3); }
+  .canvas-side.right { border-top: 4px solid var(--accent); }
+  .cs-label { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .cs-label.left { color: var(--accent3); }
+  .cs-label.right { color: var(--accent); }
+  .cs-title { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+  .cs-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+
+  .canvas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .canvas-block {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .canvas-block:hover { transform: translateY(-2px); }
+  .canvas-block.full-width { grid-column: 1 / -1; }
+  .canvas-block.col-left { border-top: 3px solid var(--accent3); }
+  .canvas-block.col-right { border-top: 3px solid var(--accent); }
+  .canvas-block.full-width { border-top: 3px solid var(--accent2); }
+
+  .cb-header {
+    padding: 14px 18px 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cb-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .cb-meta { flex: 1; }
+  .cb-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; }
+  .cb-subtitle { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  .cb-body { padding: 14px 18px 16px; }
+  .cb-prompts { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+  .cb-prompt { font-size: 0.8rem; color: var(--muted); line-height: 1.45; padding-left: 12px; position: relative; }
+  .cb-prompt::before { content: '→'; position: absolute; left: 0; color: rgba(200,241,53,0.5); }
+
+  .cb-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    padding: 10px 13px;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+  .cb-textarea:focus { outline: none; border-color: rgba(200,241,53,0.4); }
+  .cb-textarea::placeholder { color: #555; font-style: italic; }
+
+  .canvas-example {
+    background: rgba(200,241,53,0.04);
+    border: 1px solid rgba(200,241,53,0.15);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    color: rgba(200,241,53,0.7);
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  .canvas-example strong { color: var(--accent); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; }
+
+  .canvas-legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.78rem; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .canvas-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 11px 22px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger {
+    background: rgba(255,68,68,0.08);
+    color: #ff8080;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 11px 22px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,68,68,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover { background: rgba(255,68,68,0.15); }
+  .save-msg { font-size: 0.8rem; color: var(--good); font-weight: 600; display: none; align-items: center; gap: 6px; }
+
+  .completeness-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cbar-label { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+  .cbar-track { flex: 1; height: 8px; background: var(--border); border-radius: 100px; min-width: 120px; overflow: hidden; }
+  .cbar-fill { height: 100%; background: var(--accent); border-radius: 100px; transition: width 0.4s ease; width: 0%; }
+  .cbar-pct { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--accent); min-width: 40px; text-align: right; }
+
+  @media (max-width: 768px) {
+    .canvas-intro, .canvas-grid { grid-template-columns: 1fr; }
+    .canvas-block.full-width { grid-column: auto; }
+  }
+
+  .closing-card { background: linear-gradient(135deg, rgba(200,241,53,0.07) 0%, rgba(255,107,53,0.04) 100%); border-radius: 24px; border: 1px solid rgba(200,241,53,0.2); padding: 44px; text-align: center; margin-top: 20px; }
+  .closing-card h3 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .closing-card p { font-size: 0.97rem; color: var(--muted); max-width: 460px; margin: 0 auto 28px; line-height: 1.6; font-weight: 300; }
+  .move-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 680px; margin: 0 auto; }
+  .move-card { background: rgba(13,13,13,0.6); border-radius: 12px; padding: 16px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .move-card:hover { border-color: var(--accent); background: rgba(200,241,53,0.05); }
+  .move-card.selected { border-color: var(--accent); background: rgba(200,241,53,0.1); }
+  .move-icon { font-size: 1.5rem; margin-bottom: 6px; display: block; }
+  .move-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--text); }
+  .confetti-message { display: none; margin-top: 18px; font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--accent); animation: fadeIn 0.4s ease; }
+
+  .divider { display: flex; align-items: center; gap: 14px; margin: 26px 0; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .divider span { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+  @media (max-width: 768px) {
+    section { padding: 78px 18px 40px; }
+    .compare-grid, .cv-compare, .rules-grid, .format-grid { grid-template-columns: 1fr; }
+    .nb-body { grid-template-columns: 1fr; }
+    .nb-sidebar { display: none; }
+    .move-grid { grid-template-columns: 1fr 1fr; }
+    .closing-card { padding: 26px 18px; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🚀 FuturoLavoro</div>
+  <button class="nav-btn active" onclick="go('home')">Intro</button>
+  <button class="nav-btn" onclick="go('linkedin')">LinkedIn</button>
+  <button class="nav-btn" onclick="go('notebook')">NotebookLM</button>
+  <button class="nav-btn" onclick="go('portali')">Portali Lavoro</button>
+  <button class="nav-btn" onclick="go('cv')">Curriculum</button>
+  <button class="nav-btn" onclick="go('strategia')">La tua Strategia</button>
+  <button class="nav-btn" onclick="go('closing')">La tua mossa</button>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <div class="hero">
+    <div class="hero-tag"><div class="hero-dot"></div>Workshop — Strumenti per il futuro</div>
+    <h1 class="big">Il tuo<br><span>futuro</span><br>parte oggi.</h1>
+    <div class="hero-desc">Due ore per scoprire gli strumenti che usano davvero i professionisti — e che puoi iniziare a usare tu da subito, gratis.</div>
+    <div><button class="btn-primary" onclick="go('linkedin')">Inizia ›</button></div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">1B+</div><div class="stat-label">Utenti LinkedIn</div></div>
+      <div class="stat"><div class="stat-num">87%</div><div class="stat-label">Recruiter usa LinkedIn</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Strumenti chiave</div></div>
+      <div class="stat"><div class="stat-num">0€</div><div class="stat-label">Per iniziare</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LINKEDIN -->
+<section id="linkedin">
+  <div class="section-header">
+    <div class="section-num">01 — LinkedIn</div>
+    <h2>Il tuo biglietto<br>da visita digitale</h2>
+    <p>LinkedIn non è Facebook per adulti annoiati. È dove i recruiter ti cercano — anche tu, anche adesso.</p>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-box"><div class="sb-num">87%</div><div class="sb-label">dei recruiter usa LinkedIn regolarmente</div></div>
+    <div class="stat-box"><div class="sb-num">72%</div><div class="sb-label">trova candidati migliori su LinkedIn rispetto ad altri canali</div></div>
+    <div class="stat-box"><div class="sb-num">+71%</div><div class="sb-label">probabilità di colloquio con profilo completo</div></div>
+    <div class="stat-box"><div class="sb-num">50%</div><div class="sb-label">delle assunzioni avviene usando i dati competenze di LinkedIn</div></div>
+    <div class="stat-box"><div class="sb-num">8M+</div><div class="sb-label">candidature inviate ogni giorno</div></div>
+    <div class="stat-box"><div class="sb-num">8/min</div><div class="sb-label">persone assunte ogni minuto tramite LinkedIn</div></div>
+  </div>
+
+  <div class="recruiter-insight">
+    <div class="ri-title">🔍 Come ti cerca davvero un recruiter</div>
+    <div class="ri-grid">
+      <div class="ri-item"><span class="ri-icon">1️⃣</span>Apre LinkedIn Recruiter e digita keyword: <em>"stage marketing Milano"</em>, <em>"junior developer"</em>, <em>"neolaureato comunicazione"</em></div>
+      <div class="ri-item"><span class="ri-icon">2️⃣</span>L'algoritmo mostra i profili più completi con le keyword giuste nell'headline e nel riepilogo</div>
+      <div class="ri-item"><span class="ri-icon">3️⃣</span>Guarda la foto (3 secondi), legge l'headline (5 secondi): decide se continuare o passare al prossimo</div>
+      <div class="ri-item"><span class="ri-icon">4️⃣</span>Se il profilo è vuoto o senza foto, viene saltato — anche se sei la persona giusta</div>
+      <div class="ri-item"><span class="ri-icon">5️⃣</span>Usa filtri: sede, istruzione, competenze dichiarate. Se non le hai messe, non esisti nei risultati</div>
+      <div class="ri-item"><span class="ri-icon">6️⃣</span>Attivare <strong>#OpenToWork</strong> aumenta del 40% le probabilità di essere contattato da un recruiter</div>
+    </div>
+  </div>
+
+  <div class="subsection-title">Profilo scarso vs profilo che funziona</div>
+  <div class="compare-grid">
+    <div class="profile-card">
+      <div class="card-header"><div class="card-label bad">❌ Profilo che spaventa i recruiter</div><div>😬</div></div>
+      <div class="card-body">
+        <div class="fake-profile">
+          <div class="fp-top">
+            <div class="fp-avatar bad-av">🙈</div>
+            <div class="fp-info">
+              <div class="fp-name">Mario R.</div>
+              <div class="fp-headline bad-h">Studente</div>
+            </div>
+          </div>
+          <div class="fp-section"><div class="fp-section-title">📷 Foto</div><div class="fp-text bad-t">Foto al mare con amici e occhiali da sole. O peggio: nessuna.</div></div>
+          <div class="fp-section"><div class="fp-section-title">✏️ Headline</div><div class="fp-text bad-t">"Studente" — o campo completamente vuoto.</div></div>
+          <div class="fp-section"><div class="fp-section-title">📝 About</div><div class="fp-text bad-t">Vuoto. O: "Ciao, mi chiamo Mario e amo i videogiochi 🎮"</div></div>
+          <div class="fp-section"><div class="fp-section-title">💼 Esperienze</div><div class="fp-text bad-t">Sezione vuota.</div></div>
+          <div class="divider"><span>Il recruiter pensa</span></div>
+          <div class="annotation bad-a"><span>⚠️</span>"Non capisco cosa sa fare. Passo al prossimo."</div>
+          <div class="annotation bad-a"><span>⚠️</span>Non compare nelle ricerche per stage.</div>
+          <div class="annotation bad-a"><span>⚠️</span>Prima impressione: non gli interessa il futuro.</div>
+        </div>
+      </div>
+    </div>
+    <div class="profile-card">
+      <div class="card-header"><div class="card-label good">✅ Profilo che apre porte</div><div>🔥</div></div>
+      <div class="card-body">
+        <div class="fake-profile">
+          <div class="fp-top">
+            <div class="fp-avatar good-av">😊</div>
+            <div class="fp-info">
+              <div class="fp-name">Giulia Martini</div>
+              <div class="fp-headline good-h">Marketing Digitale | Graphic Design | #OpenToWork — Stage 2025</div>
+            </div>
+          </div>
+          <div class="fp-section"><div class="fp-section-title">📷 Foto</div><div class="fp-text good-t">Primo piano, sfondo neutro, sorriso naturale. Trasmette affidabilità.</div></div>
+          <div class="fp-section"><div class="fp-section-title">✏️ Headline</div><div class="fp-text good-t">Keyword reali + cosa cerca. Appare nelle ricerche dei recruiter.</div></div>
+          <div class="fp-section"><div class="fp-section-title">📝 About</div><div class="fp-text good-t">3-4 righe: chi sei, cosa ti appassiona, cosa offri. Tono umano.</div></div>
+          <div class="fp-section"><div class="fp-section-title">💼 Esperienze</div><div class="fp-text good-t">Babysitter, volontariato, stage scolastico, progetto di classe. Tutto conta se descritto bene.</div></div>
+          <div class="divider"><span>Il recruiter pensa</span></div>
+          <div class="annotation good-a"><span>✅</span>"Questa ragazza sa quello che vuole. La contatto."</div>
+          <div class="annotation good-a"><span>✅</span>Compare in "stage marketing Milano".</div>
+          <div class="annotation good-a"><span>✅</span>Prima impressione: seria, motivata, curata.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-title">Do & Don't</div>
+  <div class="rules-grid">
+    <div class="rule-list">
+      <div class="rule-item do-item"><span>✅</span>Foto professionale, sfondo neutro, sorriso naturale</div>
+      <div class="rule-item do-item"><span>✅</span>Headline con keyword reali (es. "grafica", "marketing", "stage 2025")</div>
+      <div class="rule-item do-item"><span>✅</span>Inserire anche esperienze informali: volontariato, lavori part-time, progetti</div>
+      <div class="rule-item do-item"><span>✅</span>Attivare #OpenToWork — lo vedono i recruiter, non i tuoi contatti</div>
+      <div class="rule-item do-item"><span>✅</span>URL personalizzato: linkedin.com/in/nome-cognome</div>
+      <div class="rule-item do-item"><span>✅</span>Seguire le aziende dove vorresti lavorare</div>
+    </div>
+    <div class="rule-list">
+      <div class="rule-item dont-item"><span>❌</span>Foto di gruppo, foto in vacanza, selfie o nessuna foto</div>
+      <div class="rule-item dont-item"><span>❌</span>Headline vuota o solo "Studente"</div>
+      <div class="rule-item dont-item"><span>❌</span>About copiato da un template generico o vuoto</div>
+      <div class="rule-item dont-item"><span>❌</span>Messaggi ai recruiter tipo "Ciao, cerco lavoro"</div>
+      <div class="rule-item dont-item"><span>❌</span>Creare il profilo e abbandonarlo per mesi</div>
+      <div class="rule-item dont-item"><span>❌</span>Parole abusate: "dinamico", "proattivo", "team player"</div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTEBOOKLM -->
+<section id="notebook">
+  <div class="section-header">
+    <div class="section-num">02 — NotebookLM</div>
+    <h2>L'AI che legge<br>al posto tuo</h2>
+    <p>Carica qualsiasi documento e parlagli come fosse il tuo tutor privato. Gratis. Sempre disponibile. Non si stanca mai.</p>
+  </div>
+
+  <div class="notebook-demo">
+    <div class="nb-topbar">
+      <div class="nb-dots"><div class="nb-dot"></div><div class="nb-dot"></div><div class="nb-dot"></div></div>
+      <div class="nb-title">notebooklm.google.com — Notebook Maturità</div>
+    </div>
+    <div class="nb-body">
+      <div class="nb-sidebar">
+        <div class="nb-sidebar-title">📚 Fonti caricate</div>
+        <div class="nb-doc">📄 Cap5 Illuminismo.pdf</div>
+        <div class="nb-doc">📄 Appunti Arte.pdf</div>
+        <div class="nb-doc">🔗 Wikipedia link</div>
+        <div class="nb-doc">📄 Programma esame.docx</div>
+      </div>
+      <div class="nb-chat">
+        <div class="chat-msg">
+          <div class="chat-avatar user">Tu</div>
+          <div class="chat-bubble">Fammi un riassunto in 5 punti sull'Illuminismo, adatto per la maturità.</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-avatar ai">AI</div>
+          <div class="chat-bubble ai-bubble">Dal tuo documento, i 5 punti chiave:<br>1. 🧠 Ragione come strumento di progresso<br>2. 🔬 Critica alla superstizione e all'autorità<br>3. 📖 L'Encyclopédie di Diderot e d'Alembert<br>4. ⚖️ Libertà, uguaglianza, diritti naturali<br>5. 🌍 Influenza su Rivoluzioni americana e francese</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-avatar user">Tu</div>
+          <div class="chat-bubble">Ora fai 3 domande come se fossi la mia professoressa.</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-avatar ai">AI</div>
+          <div class="chat-bubble ai-bubble">• Qual è il ruolo dell'Encyclopédie nell'Illuminismo?<br>• Come si lega il pensiero di Locke ai diritti naturali?<br>• Perché la Rivoluzione Francese è figlia dell'Illuminismo?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-title">Cosa sa fare davvero</div>
+  <div class="feature-grid">
+    <div class="feature-card"><div class="fc-icon">📂</div><div><div class="fc-title">Carica qualsiasi fonte</div><div class="fc-desc">PDF, Google Doc, link web, file testo, YouTube. Fino a 50 fonti diverse nello stesso notebook.</div></div></div>
+    <div class="feature-card"><div class="fc-icon">🎙️</div><div><div class="fc-title">Podcast audio automatico</div><div class="fc-desc">Genera un podcast di 10-15 minuti con due voci che discutono i tuoi documenti. Studia in cuffia mentre cammini.</div></div></div>
+    <div class="feature-card"><div class="fc-icon">📌</div><div><div class="fc-title">Cita sempre le fonti</div><div class="fc-desc">Ogni risposta include il riferimento esatto alla pagina del documento originale. Zero invenzioni.</div></div></div>
+    <div class="feature-card"><div class="fc-icon">🧩</div><div><div class="fc-title">Guide di studio e FAQ</div><div class="fc-desc">Chiedi: "Crea una guida con domande e risposte per l'interrogazione di domani." Materiale pronto in secondi.</div></div></div>
+    <div class="feature-card"><div class="fc-icon">🗺️</div><div><div class="fc-title">Schemi e mappe concettuali</div><div class="fc-desc">Chiedi uno schema gerarchico degli argomenti. Perfetto per visualizzare connessioni tra concetti.</div></div></div>
+    <div class="feature-card"><div class="fc-icon">🌍</div><div><div class="fc-title">Gratis con account Google</div><div class="fc-desc">Basta il tuo Gmail. Nessun costo, nessuna app. Funziona da browser su qualsiasi dispositivo.</div></div></div>
+  </div>
+
+  <div class="divider"><span>Come usarlo al meglio</span></div>
+  <div class="subsection-title">Prompt che funzionano davvero</div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <div class="tip-title">Sii specifico nella domanda</div>
+      <div class="tip-desc">❌ "Spiegami l'Illuminismo"<br>✅ "In 5 punti, spiega le cause dell'Illuminismo con un esempio pratico per ciascuno, basandoti sul capitolo caricato"</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <div class="tip-title">Chiedi formati diversi</div>
+      <div class="tip-desc">Tabella comparativa, schema cronologico, domande e risposte, riassunto in 100 parole, pro/contro. Il formato cambia tutto.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <div class="tip-title">Interrogazione simulata</div>
+      <div class="tip-desc">Scrivi: "Fai 10 domande come un professore severo sull'argomento X, poi dimmi le risposte corrette." Allena la memoria.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">04</div>
+      <div class="tip-title">Generare il podcast</div>
+      <div class="tip-desc">Clicca "Audio Overview" nel pannello destro. Il podcast viene generato automaticamente — perfetto per ripassare in cuffia.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">05</div>
+      <div class="tip-title">Prepararsi ai colloqui</div>
+      <div class="tip-desc">Carica descrizione dello stage + info sull'azienda. Chiedi: "Quali domande mi farà il recruiter e come rispondo?"</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">06</div>
+      <div class="tip-title">Confronta più documenti</div>
+      <div class="tip-desc">Carica due libri o articoli diversi e chiedi: "Quali sono le principali differenze tra questi approcci?" Impossibile da fare manualmente in poco tempo.</div>
+    </div>
+  </div>
+
+  <div class="callout blue" style="margin-top: 24px;">
+    <div class="callout-icon">🔗</div>
+    <div>
+      <div class="callout-title">Come accedere adesso</div>
+      <div class="callout-text">Vai su <strong>notebooklm.google.com</strong> → accedi con il tuo account Google → clicca "Nuovo notebook" → trascina un PDF o incolla un link. Pronto in 30 secondi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTALI -->
+<section id="portali">
+  <div class="section-header">
+    <div class="section-num">03 — Portali Lavoro</div>
+    <h2>Dove si trovano<br>stage e lavoro</h2>
+    <p>Non esiste "il portale migliore" — ognuno ha il suo punto di forza. Usarne 2-3 in parallelo raddoppia le opportunità.</p>
+  </div>
+
+  <div class="callout yellow">
+    <div class="callout-icon">⚡</div>
+    <div>
+      <div class="callout-title">Novità 2025: InfoJobs chiude, arriva Subito.it Lavoro</div>
+      <div class="callout-text">InfoJobs, storico portale italiano, confluirà in Subito.it entro fine 2025. Se hai già un account, scarica i tuoi CV prima della migrazione. Il nuovo polo sarà forte soprattutto per ricerche locali e PMI italiane.</div>
+    </div>
+  </div>
+
+  <div class="subsection-title">I portali principali</div>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(0,120,212,0.14);">🔵</div>
+      <div>
+        <div class="portal-name">LinkedIn</div>
+        <div class="portal-desc">Non solo social: il motore di ricerca lavoro più potente per profili qualificati. Il recruiter ti trova e ti contatta direttamente, anche senza che tu abbia inviato candidature.</div>
+        <div class="portal-tags"><span class="ptag green">Stage</span><span class="ptag blue">Junior/Senior</span><span class="ptag orange">Network</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(0,160,80,0.12);">🟢</div>
+      <div>
+        <div class="portal-name">Indeed</div>
+        <div class="portal-desc">Il motore n°1 al mondo: aggrega annunci da migliaia di fonti, career page aziendali e altri portali. 250 milioni di visitatori al mese. Punto di partenza universale per chiunque cerchi lavoro.</div>
+        <div class="portal-tags"><span class="ptag green">Tutti i livelli</span><span class="ptag blue">Aggregatore</span><span class="ptag green">Alert email</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(255,107,53,0.12);">🟠</div>
+      <div>
+        <div class="portal-name">Subito.it Lavoro (ex InfoJobs)</div>
+        <div class="portal-desc">Il nuovo polo generalista italiano. Particolarmente forte per ricerche locali e PMI. Se cerchi nella tua città o provincia, questo è il posto giusto.</div>
+        <div class="portal-tags"><span class="ptag green">PMI italiane</span><span class="ptag blue">Locale</span><span class="ptag orange">Operativo</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(80,200,120,0.1);">🟡</div>
+      <div>
+        <div class="portal-name">Glassdoor</div>
+        <div class="portal-desc">Offerte di lavoro + recensioni anonime dei dipendenti + stipendi reali. Prima di candidarsi, puoi leggere cosa pensano davvero le persone che lavorano lì. Eviti brutte sorprese.</div>
+        <div class="portal-tags"><span class="ptag blue">Recensioni aziende</span><span class="ptag green">Stipendi reali</span><span class="ptag orange">Trasparenza</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(59,158,255,0.12);">🔷</div>
+      <div>
+        <div class="portal-name">Monster</div>
+        <div class="portal-desc">Storica piattaforma globale, forte su profili impiegatizi e aziende strutturate. Dal 2024 in partnership con Randstad. Ottima integrazione tra caricamento CV e candidatura.</div>
+        <div class="portal-tags"><span class="ptag blue">Impiegati/Quadri</span><span class="ptag green">Multinazionali</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(255,50,100,0.1);">🔴</div>
+      <div>
+        <div class="portal-name">Wellfound (ex AngelList)</div>
+        <div class="portal-desc">Per chi vuole lavorare in startup e aziende tech innovative. Stipendi visibili, possibilità di remote working e ruoli internazionali. Molto usato dai giovani under 30.</div>
+        <div class="portal-tags"><span class="ptag orange">Startup</span><span class="ptag blue">Tech</span><span class="ptag green">Remote</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>Per giovani e neodiplomati</span></div>
+  <div class="portal-grid">
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(200,241,53,0.08);">🎓</div>
+      <div>
+        <div class="portal-name">AlmaLaurea</div>
+        <div class="portal-desc">Portale del consorzio universitario italiano. Ottimo per neolaureati e laureandi. Le aziende cercano qui i candidati freschi di studi. Profilo più dettagliato del semplice CV.</div>
+        <div class="portal-tags"><span class="ptag green">Neolaureati</span><span class="ptag blue">Stage universitari</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(59,158,255,0.08);">🌍</div>
+      <div>
+        <div class="portal-name">EURES (Portale UE)</div>
+        <div class="portal-desc">Rete europea per la mobilità lavorativa. Offerte in tutta l'UE. Ideale per chi vuole un'esperienza all'estero dopo il diploma — Erasmus per il lavoro.</div>
+        <div class="portal-tags"><span class="ptag blue">Europa</span><span class="ptag green">Estero</span><span class="ptag orange">Mobilità</span></div>
+      </div>
+    </div>
+    <div class="portal-card">
+      <div class="portal-icon" style="background:rgba(255,107,53,0.08);">📰</div>
+      <div>
+        <div class="portal-name">TrovoLavoro (Corriere della Sera)</div>
+        <div class="portal-desc">Portale del Corriere. Cerca anche stage e corsi di formazione, con filtro specifico per neolaureati e under 30. Buona copertura per profili qualificati.</div>
+        <div class="portal-tags"><span class="ptag orange">Stage</span><span class="ptag blue">Formazione</span><span class="ptag green">Under 30</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strategy-box">
+    <h3>🎯 La strategia vincente — non mandare CV a caso</h3>
+    <div class="strategy-steps">
+      <div class="strategy-step"><div class="step-num">1</div><span>Iscriviti a Indeed + LinkedIn + un portale di nicchia per il tuo settore</span></div>
+      <div class="strategy-step"><div class="step-num">2</div><span>Imposta gli <strong>alert email</strong> con keyword precise: "stage marketing Milano", "junior designer Roma" — li ricevi gratis ogni giorno</span></div>
+      <div class="strategy-step"><div class="step-num">3</div><span>Prima di candidarti, leggi la recensione su <strong>Glassdoor</strong>: conosci l'azienda prima del colloquio</span></div>
+      <div class="strategy-step"><div class="step-num">4</div><span>Personalizza <strong>ogni</strong> candidatura — CV e lettera generici vengono ignorati quasi sempre</span></div>
+      <div class="strategy-step"><div class="step-num">5</div><span>Traccia le candidature su un foglio o Notion: data, azienda, ruolo, stato. È un lavoro da gestire come un progetto</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CV -->
+<section id="cv">
+  <div class="section-header">
+    <div class="section-num">04 — Curriculum Vitae</div>
+    <h2>Il documento<br>che ti apre le porte</h2>
+    <p>Il recruiter dedica in media 7 secondi al tuo CV. In quei 7 secondi decide se continuare a leggerlo o passare al prossimo.</p>
+  </div>
+
+  <div class="callout orange">
+    <div class="callout-icon">⏱️</div>
+    <div>
+      <div class="callout-title">7 secondi. Questo è il tempo medio che un recruiter dedica al tuo CV.</div>
+      <div class="callout-text">Non legge tutto: scansiona. Prima guarda il nome, poi l'headline, poi un colpo d'occhio alle esperienze. Se in 7 secondi non capisce chi sei e cosa sai fare, passa al prossimo. Il CV deve comunicare in un colpo d'occhio.</div>
+    </div>
+  </div>
+
+  <div class="subsection-title">CV scarso vs CV che viene letto</div>
+  <div class="cv-compare">
+    <div class="cv-card">
+      <div class="cv-card-header"><div class="card-label bad">❌ CV che finisce nel cestino</div><div>🗑️</div></div>
+      <div class="cv-card-body">
+        <div>
+          <div class="cv-row"><div class="cv-label">Foto</div><div class="cv-content bad-cv">Selfie, foto di gruppo, o nessuna foto.</div></div>
+          <div class="cv-row"><div class="cv-label">Formato</div><div class="cv-content bad-cv">3 pagine, font 10, muri di testo senza spazi bianchi.</div></div>
+          <div class="cv-row"><div class="cv-label">Obiettivo</div><div class="cv-content bad-cv">"Persona dinamica, proattiva, ama lavorare in team." — Uguale a tutti.</div></div>
+          <div class="cv-row"><div class="cv-label">Esperienze</div><div class="cv-content bad-cv">Solo mansioni vaghe. Es: "Ho lavorato in un negozio."</div></div>
+          <div class="cv-row"><div class="cv-label">Competenze</div><div class="cv-content bad-cv">"Buona conoscenza di Office, Internet, buone doti comunicative."</div></div>
+          <div class="cv-row"><div class="cv-label">Email</div><div class="cv-content bad-cv"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b5d8d4c7dcdad7d0d9d9da8c8cf5dddac1d8d4dcd99bdcc1">[email&#160;protected]</a> o peggio: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e885899a8187c684dbdb9c8f89858d9aa88f85898184c68b8785">[email&#160;protected]</a></div></div>
+          <div class="cv-row"><div class="cv-label">Lingue</div><div class="cv-content bad-cv">"Inglese: buono" — senza livello né certificato.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cv-card">
+      <div class="cv-card-header"><div class="card-label good">✅ CV che viene letto</div><div>⭐</div></div>
+      <div class="cv-card-body">
+        <div>
+          <div class="cv-row"><div class="cv-label">Foto</div><div class="cv-content good-cv">Primo piano professionale, sfondo neutro, abbigliamento ordinato.</div></div>
+          <div class="cv-row"><div class="cv-label">Formato</div><div class="cv-content good-cv">1 pagina (max 2), layout pulito, font leggibile, sezioni chiare.</div></div>
+          <div class="cv-row"><div class="cv-label">Obiettivo</div><div class="cv-content good-cv">"Diplomata in Grafica, cerco stage in studio creativo a Milano per sviluppare competenze in branding." — Specifico e reale.</div></div>
+          <div class="cv-row"><div class="cv-label">Esperienze</div><div class="cv-content good-cv">Con risultati: "Ho gestito i social del negozio aumentando i follower del 40% in 3 mesi."</div></div>
+          <div class="cv-row"><div class="cv-label">Competenze</div><div class="cv-content good-cv">"Adobe Illustrator (avanzato), Canva, Premiere Pro (base), Inglese B2 (Cambridge)"</div></div>
+          <div class="cv-row"><div class="cv-label">Email</div><div class="cv-content good-cv"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6d03020008430e020a030200082d0a000c0401430e0200">[email&#160;protected]</a> — semplice e professionale.</div></div>
+          <div class="cv-row"><div class="cv-label">Lingue</div><div class="cv-content good-cv">"Inglese B2 — Cambridge First Certificate, 2024" — certificato e datato.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection-title">Le regole d'oro</div>
+  <div class="cv-rules-grid">
+    <div class="cv-rule ok"><div class="cv-rule-icon">📏</div><div class="cv-rule-text"><strong>Max 1 pagina (se sei agli inizi)</strong>Il recruiter non vuole una biografia. Una pagina ben fatta vale dieci pagine di testo disorganizzato.</div></div>
+    <div class="cv-rule ok"><div class="cv-rule-icon">🎯</div><div class="cv-rule-text"><strong>Personalizza ogni CV</strong>Adattalo a ogni annuncio. Usa le stesse parole dell'offerta — se cercano "creatività", scrivi "creatività".</div></div>
+    <div class="cv-rule ok"><div class="cv-rule-icon">📊</div><div class="cv-rule-text"><strong>Usa i numeri dove puoi</strong>"Ho gestito un evento per 200 persone" vale molto di più di "ho gestito eventi". I numeri danno concretezza e credibilità.</div></div>
+    <div class="cv-rule ok"><div class="cv-rule-icon">🔗</div><div class="cv-rule-text"><strong>Aggiungi il link LinkedIn</strong>Il CV è il teaser, LinkedIn è il film completo. Metti sempre il link al profilo ottimizzato.</div></div>
+    <div class="cv-rule ok"><div class="cv-rule-icon">📧</div><div class="cv-rule-text"><strong>Email professionale dedicata</strong>Crea <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="aec0c1c3cb80cdc1c9c0c1c3cbeec9c3cfc7c280cdc1c3">[email&#160;protected]</a> da usare solo per la ricerca lavoro. Separata dalla personale, sempre monitorata.</div></div>
+    <div class="cv-rule ok"><div class="cv-rule-icon">✅</div><div class="cv-rule-text"><strong>Fallo rileggere a qualcuno</strong>Un refuso può bastare per essere scartati. Usa l'AI per un controllo finale, poi chiedi a un adulto di fiducia.</div></div>
+    <div class="cv-rule ko"><div class="cv-rule-icon">🚫</div><div class="cv-rule-text"><strong>No "riferimenti disponibili su richiesta"</strong>È una frase degli anni '90. Lo danno per scontato. Occupa spazio prezioso inutilmente.</div></div>
+    <div class="cv-rule ko"><div class="cv-rule-icon">🚫</div><div class="cv-rule-text"><strong>No aggettivi senza prove</strong>"Sono creativo e affidabile" non prova nulla. Dimostralo con esempi concreti nelle esperienze.</div></div>
+  </div>
+
+  <div class="divider"><span>Come crearlo — strumenti consigliati</span></div>
+  <div class="format-grid">
+    <div class="format-card"><span class="fc-big-icon">🎨</span><div class="format-title">Canva</div><div class="format-desc">Template pronti, drag & drop, export PDF. Il modo più veloce per un CV graficamente curato. Gratis.</div></div>
+    <div class="format-card"><span class="fc-big-icon">🤖</span><div class="format-title">AI (Claude / ChatGPT)</div><div class="format-desc">Incolla le esperienze grezze: "Riscrivile in modo professionale per un CV." Risparmia ore di lavoro.</div></div>
+    <div class="format-card"><span class="fc-big-icon">📄</span><div class="format-title">Europass</div><div class="format-desc">Il formato standard europeo, riconosciuto ovunque. Utile per stage in Europa o nel pubblico. Gratuito su europa.eu.</div></div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-icon">💡</div>
+    <div>
+      <div class="callout-title">Il trucco dell'AI per il CV</div>
+      <div class="callout-text">Apri Claude o ChatGPT e scrivi: <em style="color: var(--text);">"Ho fatto [descrivi l'esperienza in modo grezzo]. Riscrivila come voce di curriculum, professionale, con risultati concreti, massimo 3 righe."</em> — L'AI fa la struttura, tu aggiungi la verità e personalizzi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STRATEGIA -->
+<section id="strategia">
+  <div class="section-header">
+    <div class="section-num">05 — La tua Strategia</div>
+    <h2>Job Search<br>Canvas</h2>
+    <p>Ispirato al Business Model Canvas: uno strumento visivo per avere tutta la tua strategia di ricerca in un solo posto. Compilalo adesso.</p>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-icon">🗺️</div>
+    <div>
+      <div class="callout-title">Cos'è il Job Search Canvas?</div>
+      <div class="callout-text">Creato da Gabriela De Luca, è un framework ispirato al Business Model Canvas di Osterwalder. L'idea è semplice: <strong style="color:var(--text)">il lato sinistro parla di TE</strong> (competenze, esperienze, punti di forza), <strong style="color:var(--text)">il lato destro parla di DOVE VUOI ANDARE</strong> (ruolo, stipendio, network, canali). Quando li metti insieme, hai una strategia chiara — non solo una lista di CV spediti a caso.</div>
+    </div>
+  </div>
+
+  <!-- TWO SIDES INTRO -->
+  <div class="canvas-intro">
+    <div class="canvas-side left">
+      <div class="cs-label left">← Lato sinistro — Chi sei</div>
+      <div class="cs-title">Tu & le tue risorse</div>
+      <div class="cs-desc">Le tue competenze, esperienze passate, e i punti di forza da ricordare al colloquio. Questa parte non cambia molto nel tempo — è il tuo punto di partenza.</div>
+    </div>
+    <div class="canvas-side right">
+      <div class="cs-label right">Dove vuoi andare → Lato destro</div>
+      <div class="cs-title">Il tuo obiettivo</div>
+      <div class="cs-desc">Il ruolo che cerchi, lo stipendio che vuoi, le persone che possono aiutarti e i canali che usi per trovare opportunità. Questa parte evolve con la ricerca.</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="completeness-bar">
+    <div class="cbar-label">Canvas completato</div>
+    <div class="cbar-track"><div class="cbar-fill" id="cbar-fill"></div></div>
+    <div class="cbar-pct" id="cbar-pct">0%</div>
+  </div>
+
+  <!-- CANVAS GRID -->
+  <div class="canvas-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div> Chi sei (interno)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Dove vuoi andare (esterno)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Azione concreta</div>
+  </div>
+
+  <div class="canvas-grid">
+
+    <!-- COMPETENZE -->
+    <div class="canvas-block col-left">
+      <div class="cb-header">
+        <div class="cb-icon">🧠</div>
+        <div class="cb-meta">
+          <div class="cb-title">Competenze & Punti di Forza</div>
+          <div class="cb-subtitle">Chi sei — cosa sai fare bene</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div class="cb-prompts">
+          <div class="cb-prompt">Cosa sai fare che gli altri nella tua classe non sanno fare?</div>
+          <div class="cb-prompt">In quale materia o attività ti senti più sicuro?</div>
+          <div class="cb-prompt">Cosa ti dicono spesso che fai bene?</div>
+        </div>
+        <textarea class="cb-textarea" id="c-competenze" placeholder="Es: editing video, grafica con Canva, organizzazione eventi, lingue straniere, problem solving, pazienza con le persone..." oninput="updateProgress()"></textarea>
+        <div class="canvas-example"><strong>💡 esempio</strong> — Parlo fluente inglese e francese. So usare Adobe Premiere. Ho gestito la pagina Instagram della scuola per 2 anni. Sono brava ad ascoltare le persone.</div>
+      </div>
+    </div>
+
+    <!-- RUOLO IDEALE -->
+    <div class="canvas-block col-right">
+      <div class="cb-header">
+        <div class="cb-icon">🎯</div>
+        <div class="cb-meta">
+          <div class="cb-title">Ruolo Ideale / Orizzonte</div>
+          <div class="cb-subtitle">Dove vuoi andare — nel breve e lungo termine</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div class="cb-prompts">
+          <div class="cb-prompt">Che titolo vedi vicino al tuo nome tra 3 anni?</div>
+          <div class="cb-prompt">In quale settore o tipo di azienda vorresti lavorare?</div>
+          <div class="cb-prompt">Come si chiamerebbe il tuo stage ideale?</div>
+        </div>
+        <textarea class="cb-textarea" id="c-ruolo" placeholder="Es: stage in un'agenzia di comunicazione a Milano, junior designer in una startup tech, assistente marketing in un'azienda di moda..." oninput="updateProgress()"></textarea>
+        <div class="canvas-example"><strong>💡 esempio</strong> — Breve termine: stage in comunicazione o marketing. Lungo termine: social media manager in un'azienda internazionale nel settore moda.</div>
+      </div>
+    </div>
+
+    <!-- ESPERIENZE -->
+    <div class="canvas-block col-left">
+      <div class="cb-header">
+        <div class="cb-icon">📋</div>
+        <div class="cb-meta">
+          <div class="cb-title">Esperienze Rilevanti</div>
+          <div class="cb-subtitle">Chi sei — cosa hai già fatto</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div class="cb-prompts">
+          <div class="cb-prompt">Lavori, stage, volontariato, attività extrascolastiche</div>
+          <div class="cb-prompt">Progetti scolastici importanti o premi ricevuti</div>
+          <div class="cb-prompt">Esperienze informali (babysitting, aiuto in negozio di famiglia...)</div>
+        </div>
+        <textarea class="cb-textarea" id="c-esperienze" placeholder="Es: 2 estati come cameriere, gestione Instagram della scuola, organizzazione evento sportivo, progetto di ricerca premiato, corso online completato..." oninput="updateProgress()"></textarea>
+        <div class="canvas-example"><strong>💡 esempio</strong> — Estate 2023: aiuto nel negozio di famiglia. Ho gestito il cassa e creato i cartelloni promo. Corso Canva certificato su Coursera. Referente studenti per la settimana dello sport.</div>
+      </div>
+    </div>
+
+    <!-- REDDITO / ASPETTATIVE -->
+    <div class="canvas-block col-right">
+      <div class="cb-header">
+        <div class="cb-icon">💰</div>
+        <div class="cb-meta">
+          <div class="cb-title">Aspettative & Condizioni</div>
+          <div class="cb-subtitle">Dove vuoi andare — cosa è importante per te</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div class="cb-prompts">
+          <div class="cb-prompt">Rimborso spese? Stipendio? Solo esperienza?</div>
+          <div class="cb-prompt">In presenza, remoto, ibrido?</div>
+          <div class="cb-prompt">Distanza massima da casa? Disposto a trasferirti?</div>
+        </div>
+        <textarea class="cb-textarea" id="c-reddito" placeholder="Es: disposto a uno stage non retribuito se l'azienda è buona. Preferisco Milano o zone raggiungibili. Aperto a remoto almeno parziale. Minimo rimborso spese..." oninput="updateProgress()"></textarea>
+        <div class="canvas-example"><strong>💡 esempio</strong> — Stage con rimborso spese minimo. Massimo 45 min da casa. Hybrid ok. Non cerco solo il titolo — mi interessa imparare davvero.</div>
+      </div>
+    </div>
+
+    <!-- COLLOQUIO TALKING POINTS -->
+    <div class="canvas-block col-left">
+      <div class="cb-header">
+        <div class="cb-icon">🗣️</div>
+        <div class="cb-meta">
+          <div class="cb-title">Cosa Dire al Colloquio</div>
+          <div class="cb-subtitle">Chi sei — i punti chiave da ricordare</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div class="cb-prompts">
+          <div class="cb-prompt">La storia/aneddoto che racconta meglio chi sei</div>
+          <div class="cb-prompt">Il risultato di cui sei più orgoglioso</div>
+          <div class="cb-prompt">Come risponderesti a "Parlami di te" in 2 minuti</div>
+        </div>
+        <textarea class="cb-textarea" id="c-colloquio" placeholder="Es: quando ho salvato l'evento scolastico organizzando tutto in 48h. La storia del corso che ho finito da solo durante le vacanze. Il momento in cui ho gestito un conflitto nel gruppo..." oninput="updateProgress()"></textarea>
+        <div class="canvas-example"><strong>💡 esempio</strong> — "Parlami di te": Sono Giulia, diplomata in Grafica. Ho gestito i social della scuola per 2 anni, crescendo da 200 a 900 follower. Cerco uno stage dove portare questa esperienza in un contesto professionale.</div>
+      </div>
+    </div>
+
+    <!-- NETWORK -->
+    <div class="canvas-block col-right">
+      <div class="cb-header">
+        <div class="cb-icon">🤝</div>
+        <div class="cb-meta">
+          <div class="cb-title">Network & Contatti</div>
+          <div class="cb-subtitle">Dove vuoi andare — chi può aiutarti</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div class="cb-prompts">
+          <div class="cb-prompt">Chi conosci già che lavora nel settore che ti interessa?</div>
+          <div class="cb-prompt">Chi potrebbe scrivere una referenza per te?</div>
+          <div class="cb-prompt">Chi dovresti conoscere che ancora non conosci?</div>
+        </div>
+        <textarea class="cb-textarea" id="c-network" placeholder="Es: mia zia lavora in un'agenzia di comunicazione. Il prof di informatica potrebbe referenziarmi. Devo contattare il founder di quella startup che ho visto su LinkedIn..." oninput="updateProgress()"></textarea>
+        <div class="canvas-example"><strong>💡 esempio</strong> — Ex stagista dell'agenzia X (contattata su LinkedIn). Il mio insegnante di grafica. Alumni della scuola che lavora in Nike Italia — da contattare.</div>
+      </div>
+    </div>
+
+    <!-- CANALI — FULL WIDTH -->
+    <div class="canvas-block full-width">
+      <div class="cb-header">
+        <div class="cb-icon">🌐</div>
+        <div class="cb-meta">
+          <div class="cb-title">Canali — Come ti fai trovare e come cerchi</div>
+          <div class="cb-subtitle">Azione — i ponti tra te e le opportunità</div>
+        </div>
+      </div>
+      <div class="cb-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;color:var(--accent3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">Canali attivi — come cerchi tu</div>
+            <div class="cb-prompts">
+              <div class="cb-prompt">Portali che usi o userai (Indeed, LinkedIn, Subito...)</div>
+              <div class="cb-prompt">Candidature spontanee sul sito delle aziende</div>
+              <div class="cb-prompt">Alert email impostati per quali keyword?</div>
+            </div>
+            <textarea class="cb-textarea" id="c-canali-attivi" placeholder="Es: Indeed con alert 'stage marketing Milano'. LinkedIn con #OpenToWork. Candido spontaneo su 3 aziende a settimana..." oninput="updateProgress()" style="min-height:70px;"></textarea>
+          </div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">Canali passivi — come ti trovano</div>
+            <div class="cb-prompts">
+              <div class="cb-prompt">Il tuo profilo LinkedIn è ottimizzato con keyword?</div>
+              <div class="cb-prompt">Il tuo CV è caricato su Indeed o altri portali?</div>
+              <div class="cb-prompt">Hai qualcuno che ti può raccomandare attivamente?</div>
+            </div>
+            <textarea class="cb-textarea" id="c-canali-passivi" placeholder="Es: profilo LinkedIn con #OpenToWork e keyword 'stage design'. CV caricato su Indeed. La mia tutor scolastica mi ha detto che può contattare alcune aziende..." oninput="updateProgress()" style="min-height:70px;"></textarea>
+          </div>
+        </div>
+        <div class="canvas-example" style="margin-top:12px;"><strong>💡 Il punto chiave</strong> — I canali attivi richiedono energia tua ogni giorno. I canali passivi lavorano per te anche mentre dormi. La strategia vincente usa entrambi.</div>
+      </div>
+    </div>
+
+  </div><!-- end canvas-grid -->
+
+  <!-- ACTIONS -->
+  <div class="canvas-actions">
+    <button class="btn-primary" onclick="saveCanvas()">💾 Salva il canvas</button>
+    <button class="btn-secondary" onclick="printCanvas()">🖨️ Stampa / Esporta PDF</button>
+    <button class="btn-secondary" onclick="fillExample()">✨ Mostra un esempio compilato</button>
+    <button class="btn-danger" onclick="clearCanvas()">🗑️ Azzera tutto</button>
+    <div class="save-msg" id="save-msg">✅ Salvato nel browser!</div>
+  </div>
+
+  <div class="callout orange" style="margin-top:32px;">
+    <div class="callout-icon">🔄</div>
+    <div>
+      <div class="callout-title">Il Canvas non è un modulo da compilare una volta sola</div>
+      <div class="callout-text">Tornerai su questo canvas più volte. Dopo ogni colloquio, dopo ogni rifiuto, dopo ogni nuova connessione. Aggiornarlo è parte della strategia — non un segno di fallimento. La ricerca di lavoro è un processo iterativo, non un evento singolo.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CLOSING -->
+<section id="closing">
+  <div class="section-header">
+    <div class="section-num">Fine — La tua mossa</div>
+    <h2>Cosa fai<br>questa settimana?</h2>
+    <p>Una sola cosa concreta. Scegli quella che senti più tua.</p>
+  </div>
+  <div class="closing-card">
+    <h3>Scegli la tua prossima mossa 👇</h3>
+    <p>Clicca su quella che ti impegni a fare entro domenica.</p>
+    <div class="move-grid">
+      <div class="move-card" onclick="selectMove(this)"><span class="move-icon">🔗</span><div class="move-title">Creo il mio profilo LinkedIn</div></div>
+      <div class="move-card" onclick="selectMove(this)"><span class="move-icon">🧠</span><div class="move-title">Provo NotebookLM con un appunto di scuola</div></div>
+      <div class="move-card" onclick="selectMove(this)"><span class="move-icon">📄</span><div class="move-title">Faccio il CV su Canva</div></div>
+      <div class="move-card" onclick="selectMove(this)"><span class="move-icon">🔍</span><div class="move-title">Cerco uno stage su Indeed o LinkedIn</div></div>
+      <div class="move-card" onclick="selectMove(this)"><span class="move-icon">🤖</span><div class="move-title">Mi faccio intervistare dall'AI</div></div>
+      <div class="move-card" onclick="selectMove(this)"><span class="move-icon">🚀</span><div class="move-title">Le faccio tutte</div></div>
+    </div>
+    <div class="confetti-message" id="confetti-msg">🎉 Ottima scelta. Il tuo futuro ti ringrazia!</div>
+  </div>
+</section>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const ids = ['home','linkedin','notebook','portali','cv','strategia','closing'];
+  function go(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn')[ids.indexOf(id)].classList.add('active');
+    window.scrollTo(0,0);
+  }
+  function selectMove(card) {
+    document.querySelectorAll('.move-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const msg = document.getElementById('confetti-msg');
+    msg.style.display = 'block';
+    msg.textContent = card.querySelector('.move-title').textContent.includes('tutte')
+      ? '🚀 Inarrestabile. Sei già avanti agli altri.'
+      : '🎉 Ottima scelta. Il tuo futuro ti ringrazia!';
+  }
+  // ===== CANVAS =====
+  const FIELDS = ['c-competenze','c-ruolo','c-esperienze','c-reddito','c-colloquio','c-network','c-canali-attivi','c-canali-passivi'];
+  function updateProgress() {
+    const filled = FIELDS.filter(id => { const el = document.getElementById(id); return el && el.value.trim().length > 10; }).length;
+    const pct = Math.round((filled / FIELDS.length) * 100);
+    const fill = document.getElementById('cbar-fill');
+    const pctEl = document.getElementById('cbar-pct');
+    if (fill) fill.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+  }
+  function saveCanvas() {
+    FIELDS.forEach(id => { const el = document.getElementById(id); if (el) { try { localStorage.setItem('jsc_' + id, el.value); } catch(e) {} } });
+    const msg = document.getElementById('save-msg');
+    if (msg) { msg.style.display = 'flex'; setTimeout(() => msg.style.display = 'none', 2500); }
+  }
+  function loadCanvas() {
+    FIELDS.forEach(id => { try { const val = localStorage.getItem('jsc_' + id); const el = document.getElementById(id); if (val && el) el.value = val; } catch(e) {} });
+    updateProgress();
+  }
+  function clearCanvas() {
+    if (!confirm('Vuoi davvero azzerare tutto il canvas?')) return;
+    FIELDS.forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; try { localStorage.removeItem('jsc_' + id); } catch(e) {} } });
+    updateProgress();
+  }
+  function fillExample() {
+    const ex = {
+      'c-competenze': 'Inglese B2 (Cambridge), grafica con Canva e Illustrator, editing video Premiere (base), organizzazione eventi (settimana sport scolastica — 200 persone), buone doti comunicative.',
+      'c-ruolo': 'Breve termine: stage in agenzia di comunicazione o marketing digitale a Milano.\nLungo termine: social media manager in azienda internazionale, settore moda o lifestyle.',
+      'c-esperienze': '• Estate 2023-2024: aiuto in negozio di famiglia (cassa, vetrina, social)\n• Referente studenti settimana sport 2024\n• Corso "Social Media Marketing" Coursera — certificato Google\n• Progetto grafico premiato al concorso regionale',
+      'c-reddito': 'Stage con rimborso spese. Milano e hinterland (max 1h). Ibrido ok. Non cerco solo il titolo — voglio imparare sul campo.',
+      'c-colloquio': '"Parlami di te": Mi chiamo Giulia, diplomata in grafica. Ho gestito i social del negozio di famiglia per 2 anni: da 180 a 950 follower. Completato corso Google certificato. Cerco uno stage per portare questa esperienza in contesto professionale.\n\nRisultato top: organizzazione settimana sport scolastica — 200 persone, 4 giorni di preavviso, zero problemi.',
+      'c-network': '• Zia Carla: PR agency Milano — chiedo un caffè\n• Prof. Rossi (grafica): referenza disponibile\n• Alumni scuola ora in Nike Italia — contattare su LinkedIn\n• Evento "Young Marketers" Milano — iscriversi',
+      'c-canali-attivi': '• Indeed: alert "stage marketing Milano" e "stage comunicazione"\n• LinkedIn: 5 candidature dirette/settimana + messaggi personalizzati a recruiter\n• Candidatura spontanea su sito di 3 aziende/settimana',
+      'c-canali-passivi': '• LinkedIn con #OpenToWork + keyword "stage grafica", "social media"\n• CV caricato e visibile su Indeed\n• Prof di grafica con contatti in 2 agenzie locali — mi tiene in mente'
+    };
+    FIELDS.forEach(id => { const el = document.getElementById(id); if (el && ex[id]) el.value = ex[id]; });
+    updateProgress();
+  }
+  function printCanvas() { window.print(); }
+  window.addEventListener('load', loadCanvas);
+</script>
+</body>
+</html>
