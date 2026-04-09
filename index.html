@@ -499,22 +499,29 @@
 
     .cb-body { padding: 8px 12px 10px !important; }
 
-    /* Textareas become plain bordered boxes showing their content */
+    /* Hide real textareas in print — JS injects .print-proxy divs instead */
     .cb-textarea {
+      display: none !important;
+    }
+
+    /* Print-proxy divs auto-expand to content height */
+    .print-proxy {
       display: block !important;
       width: 100% !important;
-      min-height: 60px !important;
+      min-height: 30px !important;
+      height: auto !important;
       background: #f9f9f9 !important;
       border: 1px solid #ddd !important;
       border-radius: 5px !important;
       color: #111 !important;
       font-family: 'DM Sans', sans-serif !important;
       font-size: 8.5pt !important;
+      line-height: 1.5 !important;
       padding: 7px 9px !important;
-      resize: none !important;
-      overflow: visible !important;
       white-space: pre-wrap !important;
       word-break: break-word !important;
+      overflow: visible !important;
+      box-sizing: border-box !important;
     }
 
     /* Two-column layout inside canali block */
@@ -1314,12 +1321,26 @@
     updateProgress();
   }
   function exportPDF() {
-    // Make sure we're on the strategia section
+    // 1. Switch to strategia section
     go('strategia');
-    // Small delay to ensure the section is visible before printing
+
     setTimeout(() => {
+      // 2. For each textarea in the canvas, inject a sibling div (.print-proxy)
+      //    that contains the same text and auto-expands to content height
+      const textareas = document.querySelectorAll('#strategia .cb-textarea');
+      textareas.forEach(ta => {
+        const proxy = document.createElement('div');
+        proxy.className = 'print-proxy';
+        proxy.textContent = ta.value || ' '; // space so box is never zero-height
+        ta.parentNode.insertBefore(proxy, ta.nextSibling);
+      });
+
+      // 3. Print
       window.print();
-    }, 150);
+
+      // 4. Remove proxy divs after printing
+      document.querySelectorAll('.print-proxy').forEach(p => p.remove());
+    }, 200);
   }
   window.addEventListener('load', loadCanvas);
 </script>
