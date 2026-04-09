@@ -370,6 +370,218 @@
     .stat-strip { grid-template-columns: repeat(2, 1fr); }
     .hero-stats { gap: 24px; }
   }
+
+  /* ===== PRINT / PDF STYLES ===== */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 14mm 14mm 14mm 14mm;
+    }
+
+    /* Hide everything except the canvas section */
+    nav,
+    #home, #linkedin, #notebook, #portali, #cv, #closing,
+    .canvas-intro,
+    .completeness-bar,
+    .canvas-legend,
+    .canvas-actions,
+    .callout,
+    .section-header p,
+    .cb-prompts,
+    .canvas-example,
+    .cb-subtitle {
+      display: none !important;
+    }
+
+    body {
+      background: #fff !important;
+      color: #111 !important;
+      font-family: 'DM Sans', Georgia, serif;
+      font-size: 10pt;
+    }
+
+    #strategia {
+      display: block !important;
+      padding: 0 !important;
+      min-height: unset !important;
+      animation: none !important;
+    }
+
+    /* PDF header */
+    .pdf-header {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #111;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+    }
+    .pdf-header-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20pt;
+      font-weight: 800;
+      color: #111;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .pdf-header-sub {
+      font-size: 9pt;
+      color: #555;
+      margin-top: 3px;
+    }
+    .pdf-name-block {
+      text-align: right;
+    }
+    .pdf-name-label {
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 2px;
+    }
+    .pdf-name-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 13pt;
+      font-weight: 700;
+      color: #111;
+      border-bottom: 1.5px solid #ccc;
+      min-width: 160px;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+
+    /* Section title */
+    .section-header h2 {
+      font-size: 14pt !important;
+      color: #111 !important;
+      margin-bottom: 4px !important;
+      letter-spacing: -0.02em !important;
+    }
+    .section-num {
+      font-size: 7pt !important;
+      color: #666 !important;
+      margin-bottom: 4px !important;
+    }
+
+    /* Canvas grid: 2 columns on A4 */
+    .canvas-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 10px !important;
+      margin-bottom: 10px !important;
+    }
+
+    .canvas-block {
+      background: #fff !important;
+      border: 1.5px solid #ccc !important;
+      border-radius: 6px !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .canvas-block.col-left { border-top: 3px solid #3b9eff !important; }
+    .canvas-block.col-right { border-top: 3px solid #8bc400 !important; }
+    .canvas-block.full-width {
+      grid-column: 1 / -1 !important;
+      border-top: 3px solid #ff6b35 !important;
+    }
+
+    .cb-header {
+      padding: 8px 12px 6px !important;
+      border-bottom: 1px solid #e0e0e0 !important;
+    }
+    .cb-icon { font-size: 1rem !important; }
+    .cb-title {
+      font-size: 9.5pt !important;
+      font-weight: 700 !important;
+      color: #111 !important;
+      font-family: 'Syne', sans-serif !important;
+    }
+
+    .cb-body { padding: 8px 12px 10px !important; }
+
+    /* Textareas become plain bordered boxes showing their content */
+    .cb-textarea {
+      display: block !important;
+      width: 100% !important;
+      min-height: 60px !important;
+      background: #f9f9f9 !important;
+      border: 1px solid #ddd !important;
+      border-radius: 5px !important;
+      color: #111 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 8.5pt !important;
+      padding: 7px 9px !important;
+      resize: none !important;
+      overflow: visible !important;
+      white-space: pre-wrap !important;
+      word-break: break-word !important;
+    }
+
+    /* Two-column layout inside canali block */
+    .canvas-block.full-width .cb-body > div {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 12px !important;
+    }
+
+    /* Sub-labels inside canali */
+    .canvas-block.full-width .cb-body [style*="Syne"] {
+      font-size: 7.5pt !important;
+      color: #555 !important;
+      font-weight: 700 !important;
+      margin-bottom: 5px !important;
+    }
+
+    /* Footer */
+    .pdf-footer {
+      display: block !important;
+      text-align: center;
+      margin-top: 14px;
+      font-size: 7.5pt;
+      color: #aaa;
+      border-top: 1px solid #eee;
+      padding-top: 6px;
+    }
+
+    /* Hide name input field in screen, show value in print */
+    #pdf-name-input { display: none !important; }
+    #pdf-name-display { display: inline !important; }
+  }
+
+  /* Screen-only: hide pdf-only elements */
+  .pdf-header { display: none; }
+  .pdf-footer { display: none; }
+  #pdf-name-display { display: none; }
+  .pdf-name-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 22px;
+    margin-bottom: 20px;
+  }
+  .pdf-name-input-wrap label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  #pdf-name-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+  }
+  #pdf-name-input:focus { outline: none; border-color: rgba(200,241,53,0.4); }
+  #pdf-name-input::placeholder { color: #555; }
 </style>
 </head>
 <body>
@@ -787,6 +999,24 @@
     <p>Ispirato al Business Model Canvas: uno strumento visivo per avere tutta la tua strategia di ricerca in un solo posto. Compilalo adesso.</p>
   </div>
 
+  <!-- PDF HEADER (visible only in print) -->
+  <div class="pdf-header">
+    <div>
+      <div class="pdf-header-title">Job Search Canvas</div>
+      <div class="pdf-header-sub">futurolavoro.vercel.app — La tua strategia di ricerca lavoro</div>
+    </div>
+    <div class="pdf-name-block">
+      <div class="pdf-name-label">Nome</div>
+      <div class="pdf-name-value"><span id="pdf-name-display"></span></div>
+    </div>
+  </div>
+
+  <!-- NAME FIELD (visible only on screen) -->
+  <div class="pdf-name-input-wrap">
+    <label>👤 Il tuo nome (apparirà nel PDF):</label>
+    <input type="text" id="pdf-name-input" placeholder="Es. Giulia Martini" oninput="document.getElementById('pdf-name-display').textContent = this.value">
+  </div>
+
   <div class="callout blue">
     <div class="callout-icon">🗺️</div>
     <div>
@@ -981,13 +1211,18 @@
 
   </div><!-- end canvas-grid -->
 
+  <!-- PDF FOOTER (print only) -->
+  <div class="pdf-footer">
+    Generato da futurolavoro.vercel.app · Job Search Canvas ispirato al framework di Gabriela De Luca
+  </div>
+
   <!-- ACTIONS -->
   <div class="canvas-actions">
-    <button class="btn-primary" onclick="saveCanvas()">💾 Salva il canvas</button>
-    <button class="btn-secondary" onclick="printCanvas()">🖨️ Stampa / Esporta PDF</button>
-    <button class="btn-secondary" onclick="fillExample()">✨ Mostra un esempio compilato</button>
+    <button class="btn-primary" onclick="exportPDF()">📄 Scarica PDF</button>
+    <button class="btn-secondary" onclick="saveCanvas()">💾 Salva nel browser</button>
+    <button class="btn-secondary" onclick="fillExample()">✨ Mostra esempio compilato</button>
     <button class="btn-danger" onclick="clearCanvas()">🗑️ Azzera tutto</button>
-    <div class="save-msg" id="save-msg">✅ Salvato nel browser!</div>
+    <div class="save-msg" id="save-msg">✅ Salvato!</div>
   </div>
 
   <div class="callout orange" style="margin-top:32px;">
@@ -1078,7 +1313,14 @@
     FIELDS.forEach(id => { const el = document.getElementById(id); if (el && ex[id]) el.value = ex[id]; });
     updateProgress();
   }
-  function printCanvas() { window.print(); }
+  function exportPDF() {
+    // Make sure we're on the strategia section
+    go('strategia');
+    // Small delay to ensure the section is visible before printing
+    setTimeout(() => {
+      window.print();
+    }, 150);
+  }
   window.addEventListener('load', loadCanvas);
 </script>
 </body>
