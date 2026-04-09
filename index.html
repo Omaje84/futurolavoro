@@ -1321,26 +1321,240 @@
     updateProgress();
   }
   function exportPDF() {
-    // 1. Switch to strategia section
-    go('strategia');
+    const name = document.getElementById('pdf-name-input').value.trim() || '—';
+    const date = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
 
-    setTimeout(() => {
-      // 2. For each textarea in the canvas, inject a sibling div (.print-proxy)
-      //    that contains the same text and auto-expands to content height
-      const textareas = document.querySelectorAll('#strategia .cb-textarea');
-      textareas.forEach(ta => {
-        const proxy = document.createElement('div');
-        proxy.className = 'print-proxy';
-        proxy.textContent = ta.value || ' '; // space so box is never zero-height
-        ta.parentNode.insertBefore(proxy, ta.nextSibling);
-      });
+    const blocks = [
+      { id: 'c-competenze', icon: '🧠', title: 'Competenze & Punti di Forza', side: 'Chi sei', color: '#3b9eff' },
+      { id: 'c-ruolo',      icon: '🎯', title: 'Ruolo Ideale / Orizzonte',    side: 'Dove vuoi andare', color: '#8bc400' },
+      { id: 'c-esperienze', icon: '📋', title: 'Esperienze Rilevanti',         side: 'Chi sei', color: '#3b9eff' },
+      { id: 'c-reddito',    icon: '💰', title: 'Aspettative & Condizioni',     side: 'Dove vuoi andare', color: '#8bc400' },
+      { id: 'c-colloquio',  icon: '🗣️', title: 'Cosa Dire al Colloquio',       side: 'Chi sei', color: '#3b9eff' },
+      { id: 'c-network',    icon: '🤝', title: 'Network & Contatti',           side: 'Dove vuoi andare', color: '#8bc400' },
+    ];
+    const canaliAttivi  = document.getElementById('c-canali-attivi').value.trim();
+    const canaliPassivi = document.getElementById('c-canali-passivi').value.trim();
 
-      // 3. Print
-      window.print();
+    function esc(t) {
+      return (t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
 
-      // 4. Remove proxy divs after printing
-      document.querySelectorAll('.print-proxy').forEach(p => p.remove());
-    }, 200);
+    let blocksHTML = '';
+    blocks.forEach(b => {
+      const val = document.getElementById(b.id).value.trim();
+      blocksHTML += `
+        <div class="block">
+          <div class="block-header" style="border-left:4px solid ${b.color}">
+            <span class="block-icon">${b.icon}</span>
+            <div>
+              <div class="block-title">${b.title}</div>
+              <div class="block-side">${b.side}</div>
+            </div>
+          </div>
+          <div class="block-content">${esc(val) || '<span class="empty">— non compilato —</span>'}</div>
+        </div>`;
+    });
+
+    const html = `<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Job Search Canvas — ${name}</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9.5pt;
+    color: #111;
+    background: #fff;
+    padding: 14mm;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 3px solid #111;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .header-left h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22pt;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .header-left p { font-size: 8pt; color: #666; margin-top: 3px; }
+  .header-right { text-align: right; }
+  .header-right .lbl { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.1em; color: #999; }
+  .header-right .nome { font-family: 'Syne', sans-serif; font-size: 14pt; font-weight: 700; }
+  .header-right .data { font-size: 8pt; color: #777; margin-top: 2px; }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 12px;
+    font-size: 8pt;
+    color: #555;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  /* BLOCK */
+  .block {
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .block-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 10px 6px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .block-icon { font-size: 13pt; line-height: 1.2; flex-shrink: 0; }
+  .block-title { font-family: 'Syne', sans-serif; font-size: 9pt; font-weight: 700; color: #111; }
+  .block-side { font-size: 7pt; color: #888; margin-top: 1px; }
+  .block-content {
+    padding: 8px 10px;
+    font-size: 8.5pt;
+    line-height: 1.55;
+    color: #222;
+    min-height: 36px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .empty { color: #bbb; font-style: italic; }
+
+  /* CANALI BLOCK */
+  .block-full {
+    border: 1.5px solid #ddd;
+    border-left: 4px solid #ff6b35;
+    border-radius: 6px;
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .block-full .block-header {
+    border-left: none;
+  }
+  .canali-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .canali-col {
+    padding: 8px 10px;
+  }
+  .canali-col:first-child {
+    border-right: 1px solid #e5e5e5;
+  }
+  .canali-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 5px;
+  }
+  .canali-text {
+    font-size: 8.5pt;
+    line-height: 1.55;
+    color: #222;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 28px;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 7pt;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    padding-top: 6px;
+  }
+
+  @media print {
+    @page { size: A4 portrait; margin: 12mm; }
+    body { padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Job Search Canvas</h1>
+    <p>Strategia di ricerca lavoro — futurolavoro.vercel.app</p>
+  </div>
+  <div class="header-right">
+    <div class="lbl">Compilato da</div>
+    <div class="nome">${esc(name)}</div>
+    <div class="data">${date}</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b9eff"></span> Chi sei (interno)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#8bc400"></span> Dove vuoi andare (esterno)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ff6b35"></span> Azione</div>
+</div>
+
+<div class="grid">
+  ${blocksHTML}
+</div>
+
+<div class="block-full">
+  <div class="block-header" style="background:#f7f7f7; border-bottom:1px solid #e5e5e5;">
+    <span class="block-icon">🌐</span>
+    <div>
+      <div class="block-title">Canali — Come ti fai trovare e come cerchi</div>
+      <div class="block-side">Azione — i ponti tra te e le opportunità</div>
+    </div>
+  </div>
+  <div class="canali-grid">
+    <div class="canali-col">
+      <div class="canali-label" style="color:#3b9eff">Canali attivi — come cerchi tu</div>
+      <div class="canali-text">${esc(canaliAttivi) || '<span class="empty">— non compilato —</span>'}</div>
+    </div>
+    <div class="canali-col">
+      <div class="canali-label" style="color:#8bc400">Canali passivi — come ti trovano</div>
+      <div class="canali-text">${esc(canaliPassivi) || '<span class="empty">— non compilato —</span>'}</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Generato da futurolavoro.vercel.app · Job Search Canvas · Ispirato al framework di Gabriela De Luca
+</div>
+
+<script>
+  window.onload = function() { window.print(); };
+</script>
+</body>
+</html>`;
+
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
   }
   window.addEventListener('load', loadCanvas);
 </script>
